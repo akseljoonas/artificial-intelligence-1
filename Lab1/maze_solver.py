@@ -45,9 +45,10 @@ def solve_maze_general(maze, algorithm):
         for d in room.get_connections():
             new_room, cost = room.make_move(d, state.get_cost())    # Get new room after move and cost to get there
             
-            if d not in visited: 
-                # loop through every possible move
-                new_state = State(new_room, state, cost)                # Create new state with new room and old room
+            # loop through every possible move
+
+            new_state = State(new_room, state, cost)               # Create new state with new room and old room
+            if new_room not in visited:
                 fr.push(new_state)                                      # push the new state
                 visited.append(new_room)                               # add new state to visited
 
