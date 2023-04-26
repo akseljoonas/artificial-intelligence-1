@@ -13,8 +13,10 @@ def solve_maze_general(maze, algorithm):
     # select the right fringe for each algorithm
     if algorithm == "BFS":
         fr = Fringe("FIFO")
-    elif algorithm == "DFS":
+    elif algorithm == "DFS" or algorithm == "IDS":
         fr = Fringe("STACK")
+    elif algorithm == "UCS" or algorithm == "GREEDY" or algorithm == "ASTAR":
+        fr = Fringe("PRIORITY")
     else:
         print("Algorithm not found/implemented, exit")
         return
@@ -41,16 +43,23 @@ def solve_maze_general(maze, algorithm):
             print()  # print newline
             maze.print_maze_with_path(state)
             return True
-
+        
+        visited.append(room)  
         for d in room.get_connections():
             new_room, cost = room.make_move(d, state.get_cost())    # Get new room after move and cost to get there
             
             # loop through every possible move
-
-            new_state = State(new_room, state, cost)               # Create new state with new room and old room
-            if new_room not in visited:
-                fr.push(new_state)                                      # push the new state
-                visited.append(new_room)                               # add new state to visited
+            if algorithm == "GREEDY":
+                new_state = State(new_room, state, cost, priority = new_room.get_heuristic_value())               # Create new state with new room and old room
+            elif algorithm == "ASTAR":
+                new_state = State(new_room, state, cost, priority = cost + new_room.get_heuristic_value())               # Create new state with new room and old room
+            else:
+                new_state = State(new_room, state, cost, priority = cost)               # Create new state with new room and old room
+            
+            if new_room not in visited: #and new_state not in fr:
+                fr.push(new_state)
+                                                      # push the new state
+                                             # add new state to visited
 
     print("not solved")     # fringe is empty and goal is not found, so maze is not solved
     fr.print_stats()        # print the statistics of the fringe
