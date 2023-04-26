@@ -2,7 +2,20 @@
 from fringe import Fringe
 from state import State
 
+def recursive_dls(state, maze, limit):
+    lxl
 
+
+def depth_limited_search(state, maze, depth):
+    return recursive_dls(state, maze, depth)
+
+def iterative_deepening_search(fr, state, maze):
+    
+    for d in range(1, 10000):
+        result = depth_limited_search(state, maze, d)
+        if result is not -1:
+            return result
+    
 def solve_maze_general(maze, algorithm):
     """
     Finds a path in a given maze with the given algorithm
@@ -27,6 +40,20 @@ def solve_maze_general(maze, algorithm):
     fr.push(state)
     visited = [room]
 
+    if algorithm == "IDS":
+        room = iterative_deepening_search(fr, state, maze)
+        
+        if room.is_goal():
+            # if room is the goal, print that with the statistics and the path and return
+            print("solved")
+            fr.print_stats()
+            state.print_path()
+            state.print_actions()
+            print()  # print newline
+            maze.print_maze_with_path(state)
+            return True
+        
+            
     while not fr.is_empty():
 
         # get item from fringe and get the room from that state
