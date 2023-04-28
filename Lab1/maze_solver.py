@@ -3,8 +3,8 @@ from fringe import Fringe
 from state import State
 
 def recursive_dls(fr, state, room, maze, limit, visited):
-    
-    if room.is_goal():
+
+    if room.is_goal(): # print goal stats
             # if room is the goal, print that with the statistics and the path and return
             print("solved")
             fr.print_stats()
@@ -16,23 +16,15 @@ def recursive_dls(fr, state, room, maze, limit, visited):
     elif limit == 0:
         return False 
     else:
-        cutoff_occured = False
-        for d in room.get_connections():
-                new_room, cost = room.make_move(d, state.get_cost())    # Get new room after move and cost to get there
-                new_state = State(new_room, state, cost, priority = cost)               # Create new state with new room and old room
-                result = recursive_dls(fr, new_state, new_room, maze, limit-1, visited)
-                if result == False:
-                    cutoff_occured = True
-                elif result is not False: # failure check needs to be implemented here. DO NOT FORGET THIS SHIT, PEDED. 
-                    return result
-                if new_room not in visited: #and new_state not in fr:
-                    fr.push(new_state)
+        visited.append(room)  # add current room to visited
+        for d in room.get_connections(): #try to move to every connection
+            new_room, cost = room.make_move(d, state.get_cost())    # Get new room after move and cost to get there
+            new_state = State(new_room, state, cost, priority = cost)           # Create new state with new room and old room
+            result = recursive_dls(fr, new_state, new_room, maze, limit-1, visited)
+
+            if result is not False: 
+                return result
                     
-        if cutoff_occured: #this fucked up needs to be fixed lol 
-            return cutoff
-        else: 
-            result failure
-        
     return False
 
 
@@ -106,14 +98,14 @@ def solve_maze_general(maze, algorithm):
                 
                 if new_room not in visited: #and new_state not in fr:
                     fr.push(new_state)
-                                                        # push the new state
-                                                # add new state to visited
+
+
 
         print("not solved")     # fringe is empty and goal is not found, so maze is not solved
         fr.print_stats()        # print the statistics of the fringe
         return False
+        
 
 
-    # all_visited_rooms = [], visited = False, number = 1
         
         
