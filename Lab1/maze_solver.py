@@ -16,11 +16,11 @@ def recursive_dls(fr, state, room, maze, limit, visited):
     elif limit == 0:
         return False 
     else:
-        visited.append(room)  # add current room to visited
         for d in room.get_connections(): #try to move to every connection
             new_room, cost = room.make_move(d, state.get_cost())    # Get new room after move and cost to get there
             new_state = State(new_room, state, cost, priority = cost)           # Create new state with new room and old room
             result = recursive_dls(fr, new_state, new_room, maze, limit-1, visited)
+
 
             if result is not False: 
                 return result
