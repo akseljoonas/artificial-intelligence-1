@@ -152,14 +152,14 @@ def hill_climbing(board):
     """
     i = 0
     optimum = (len(board) - 1) * len(board) / 2
-    
+
     while evaluate_state(board) != optimum:
         i += 1
         print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
         if i == 1000:  # Give up after 1000 tries.
             break
-        neighbor = find_local_minimum(board)
-        if evaluate_state(neighbor) <= evaluate_state(board)
+        neighbor = find_local_minima(board)
+        if evaluate_state(neighbor) <= evaluate_state(board):
             break
         board = neighbor
 
