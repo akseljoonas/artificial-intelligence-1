@@ -168,8 +168,9 @@ def hill_climbing(board):
             break
         neighbor = find_local_minima(board)
         if evaluate_state(neighbor) <= evaluate_state(board):
-            break
-        board = neighbor
+            board = neighbor
+            print_board(neighbor)
+
 
     if evaluate_state(board) == optimum:
         print('Solved puzzle!')
