@@ -79,7 +79,7 @@ def print_board(board):
             if board[column] == row:
                 line += 'Q' if in_conflict_with_another_queen(row, column, board) else 'q'
             else:
-                line += '.'
+                line += '-'
         print(line)
 
 
@@ -134,7 +134,24 @@ def hill_climbing(board):
     :param board:
     :return:
     """
-    pass
+    i = 0
+    optimum = (len(board) - 1) * len(board) / 2
+    
+    while evaluate_state(board) != optimum:
+        i += 1
+        print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
+        if i == 1000:  # Give up after 1000 tries.
+            break
+        neighbor = find_local_minimum(board)
+        if evaluate_state(neighbor) <= evaluate_state(board)
+            break
+        board = neighbor
+
+    if evaluate_state(board) == optimum:
+        print('Solved puzzle!')
+
+    print('Final state is:')
+    print_board(board)
 
 
 def simulated_annealing(board):
