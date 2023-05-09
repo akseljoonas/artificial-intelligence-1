@@ -135,6 +135,7 @@ def find_local_minima(board):
     size = len(board)
 
     for column in range(size - 1):
+        new_board = board
         for row in range(size - 1):
             new_board[column] = row
             # newly found board is better
