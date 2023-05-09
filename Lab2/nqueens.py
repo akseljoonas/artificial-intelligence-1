@@ -131,18 +131,26 @@ def find_local_minima(board):
     conflicts = evaluate_state(board)
     new_conflicts = 0
     new_board = board
+    best_board = board
     size = len(board)
 
     for column in range(size - 1):
         for row in range(size - 1):
             new_board[column] = row
-            #newly found board is better
+            # newly found board is better
             if evaluate_state(new_board) < conflicts:
-                board = new_board
+                best_board = new_board
+            # newly found board is worse
+            if evaluate_state(new_board) > conflicts:
+                pass
+            # newly found board is the same
+            if evaluate_state(new_board) == conflicts:
+                if random.randint(0,1) == 0:
+                    best_board = new_board
+                else:
+                    pass
 
-
-    return new_board
-
+    return best_board
 
 def hill_climbing(board):
     """
