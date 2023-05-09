@@ -127,6 +127,22 @@ def random_search(board):
     print('Final state is:')
     print_board(board)
 
+def find_local_minima(board):
+    conflicts = evaluate_state(board)
+    new_conflicts = 0
+    new_board = board
+    size = len(board)
+
+    for column in range(size - 1):
+        for row in range(size - 1):
+            new_board[column] = row
+            #newly found board is better
+            if evaluate_state(new_board) < conflicts:
+                board = new_board
+
+
+    return new_board
+
 
 def hill_climbing(board):
     """
