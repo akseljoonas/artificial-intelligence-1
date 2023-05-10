@@ -202,6 +202,25 @@ def simulated_annealing(board):
     print('Final state is:')
     print_board(board)
 
+def genetic_algortihm(board, fitness):
+    i = 0
+    optimum = (len(board) - 1) * len(board) / 2
+
+    while evaluate_state(board) != optimum:
+        i += 1
+        print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
+        if i == 1000:  # Give up after 1000 tries.
+            break
+
+        for column, row in enumerate(board):  # For each column, place the queen in a random row
+            board[column] = random.randint(0, len(board)-1)
+
+    if evaluate_state(board) == optimum:
+        print('Solved puzzle!')
+
+    print('Final state is:')
+    print_board(board)
+
 
 def main():
     """
@@ -222,12 +241,12 @@ def main():
         return False
 
     print('Which algorithm to use?')
-    algorithm = input('1: random, 2: hill-climbing, 3: simulated annealing \n')
+    algorithm = input('1: random, 2: hill-climbing, 3: simulated annealing, 4: genetic algorithm \n')
 
     try:
         algorithm = int(algorithm)
 
-        if algorithm not in range(1, 4):
+        if algorithm not in range(1, 5):
             raise ValueError
 
     except ValueError:
@@ -244,6 +263,9 @@ def main():
         hill_climbing(board)
     if algorithm == 3:
         simulated_annealing(board)
+    if algorithm == 4:
+        genetic_algortihm(board, 1-(1/evaluate_state(board)))
+        
 
 
 # This line is the starting point of the program.
