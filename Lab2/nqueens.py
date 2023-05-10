@@ -202,24 +202,61 @@ def simulated_annealing(board):
     print('Final state is:')
     print_board(board)
 
-def genetic_algortihm(board, fitness):
-    i = 0
+
+
+
+def genetic_algortihm(board):
+    iterations = 0
     optimum = (len(board) - 1) * len(board) / 2
 
+    population  = []
+    population_fitness = []
+    POPULATION_SIZE = 60
+    MUTATION_PROBABILITY = 0.05
+    
+    for i in range(POPULATION_SIZE):
+        temp = init_board(len(board))
+        population.append(temp)
+        population_fitness.append(get_fitness(temp))
+
+
     while evaluate_state(board) != optimum:
-        i += 1
-        print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
-        if i == 1000:  # Give up after 1000 tries.
+        iterations += 1
+        print('iteration ' + str(iterations) + ': evaluation = ' + str(evaluate_state(board)))
+        if iterations == 1000:  # Give up after 1000 tries.
             break
 
-        for column, row in enumerate(board):  # For each column, place the queen in a random row
-            board[column] = random.randint(0, len(board)-1)
+        # START OF GENETIC
+        new_population = []
+        for i in range(POPULATION_SIZE):
+            mom = random.choice(population)
+            dad = random.choice(population)
+            child = reproduce(mom, dad)
+            if (random.random() < MUTATION_PROBABILITY):
+                child = mutate(child)
+            
+            new_population.append(child)
+
+        population = new_population
+
 
     if evaluate_state(board) == optimum:
         print('Solved puzzle!')
 
     print('Final state is:')
     print_board(board)
+
+def get_fitness(board):
+    return 1/(1+count_conflicts(board))
+
+def reproduce(x,y): # finish this shit
+    cut = random.randint(0, len(x)-1)
+    return x[:cut] + y[cut:]
+
+
+def mutate(child):
+    child[random.randint(0, len(child)-1)] = random.randint(0, len(child)-1)
+    return child
 
 
 def main():
@@ -264,7 +301,7 @@ def main():
     if algorithm == 3:
         simulated_annealing(board)
     if algorithm == 4:
-        genetic_algortihm(board, 1-(1/evaluate_state(board)))
+        genetic_algortihm(board)
         
 
 
