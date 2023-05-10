@@ -128,51 +128,34 @@ def random_search(board):
     print_board(board)
 
 def find_local_minima(board):
-    conflicts = evaluate_state(board)
-    new_conflicts = 0
-    new_board = board
-    best_board = board
-    size = len(board)
-
-    for column in range(size - 1):
-        new_board = board
-        for row in range(size - 1):
+    best_board = board.copy()
+    for column in range(len(board)):
+        new_board = board.copy()
+        for row in range(len(board)):
             new_board[column] = row
             # newly found board is better
-            if evaluate_state(new_board) < conflicts:
-                best_board = new_board
-            # newly found board is worse
-            if evaluate_state(new_board) > conflicts:
-                pass
-            # newly found board is the same
-            if evaluate_state(new_board) == conflicts:
-                if random.randint(0,1) == 0:
-                    best_board = new_board
-                else:
-                    pass
-
+            if evaluate_state(new_board) > evaluate_state(best_board):
+                best_board = new_board.copy()
+            elif evaluate_state(new_board) == evaluate_state(best_board):
+                if random.randint(0, 1) == 1:
+                    best_board = new_board.copy()
     return best_board
 
 def hill_climbing(board):
-    """
-    Implement this yourself.
-    :param board:
-    :return:
-    """
+
     i = 0
     optimum = (len(board) - 1) * len(board) / 2
 
     while evaluate_state(board) != optimum:
-        print_board(board)
         i += 1
         print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
+        #print_board(board)
         if i == 1000:  # Give up after 1000 tries.
             break
-        neighbor = find_local_minima(board)
-        if evaluate_state(neighbor) < evaluate_state(board):
-            board = neighbor
-        else:
-            break
+
+        best_neighbor = find_local_minima(board)
+        if evaluate_state(best_neighbor) >= evaluate_state(board):
+            board = best_neighbor.copy()
 
 
     if evaluate_state(board) == optimum:
@@ -181,14 +164,43 @@ def hill_climbing(board):
     print('Final state is:')
     print_board(board)
 
+def time_to_temperature():
+    print() ## here should be implemented the temperature function
 
 def simulated_annealing(board):
-    """
-    Implement this yourself.
-    :param board:
-    :return:
-    """
-    pass
+    i = 0
+    optimum = (len(board) - 1) * len(board) / 2
+
+    current_board = board.copy()
+    while evaluate_state(board) != optimum:
+        i += 1
+        print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
+        if i == 1000:  # Give up after 1000 tries.
+            break
+
+        T = time_to_temperature()
+        if T == 0:
+            break
+
+        new_board = []
+        for column in enumerate(board):  # For each column, place the queen in a random row
+            new_board[column] = random.randint(0, len(board)-1)
+
+        delta_e = evaluate_state(new_board) - evaluate_state(current_board)
+
+        if delta_e > 0:
+            current_board = new_board.copy()
+        else:
+            if random.random() <= delta_e / T:
+                current_board = new_board.copy()
+
+        board = current_board.copy()
+
+    if evaluate_state(board) == optimum:
+        print('Solved puzzle!')
+
+    print('Final state is:')
+    print_board(board)
 
 
 def main():
