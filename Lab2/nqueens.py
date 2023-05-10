@@ -227,6 +227,82 @@ def simulated_annealing(board):
     print_board(board)
 
 
+
+
+def genetic_algortihm(board):
+    iterations = 0
+    optimum = (len(board) - 1) * len(board) / 2
+
+    population  = []
+    population_fitness = []
+    POPULATION_SIZE = 100
+    NEW_GEN_CUT = 0.4
+    MUTATION_PROBABILITY = 0.1
+    
+    for i in range(POPULATION_SIZE):
+        temp = init_board(len(board))
+        population.append(temp)
+        population_fitness.append(get_fitness(temp))
+
+
+    while evaluate_state(board) != optimum:
+        iterations += 1
+        print('iteration ' + str(iterations) + ': evaluation = ' + str(evaluate_state(board)))
+        if iterations == 1000:  # Give up after 1000 tries.
+            break
+
+        # START OF GENETIC
+        new_population = []
+        new_population_fitness = []
+        
+        for i in range(POPULATION_SIZE):
+            mom = random.choice(population)
+            dad = random.choice(population)
+            child = reproduce(mom, dad)
+            if (random.random() < MUTATION_PROBABILITY):
+                child = mutate(child)
+            
+            new_population.append(child)
+            new_population_fitness.append(get_fitness(child))
+            
+        #map fitness to state and sort it
+        
+        top10, top10_fitness = [list(a) for a in zip(*sorted(zip(new_population, new_population_fitness), key=lambda pair: pair[1], reverse=True))]
+
+        
+        #print(new_population, new_population_fitness)
+        
+        population = top10[:int(POPULATION_SIZE * NEW_GEN_CUT)]
+        
+        population_fitness = top10_fitness[:int(POPULATION_SIZE * NEW_GEN_CUT)]
+
+        """for i in range(int(POPULATION_SIZE * NEW_GEN_CUT)):
+        if population_fitness[i] == 1.0:
+        print('Solved puzzle! BUT DIDNT ASSIGN')"""
+
+        
+        board = top10[0]
+
+
+    if evaluate_state(board) == optimum:
+        print('Solved puzzle!')
+
+    print('Final state is:')
+    print_board(board)
+
+def get_fitness(board):
+    return 1/(1+count_conflicts(board))
+
+def reproduce(x,y): # finish this shit
+    cut = random.randint(0, len(x)-1)
+    return x[:cut] + y[cut:]
+
+
+def mutate(child):
+    child[random.randint(0, len(child)-1)] = random.randint(0, len(child)-1)
+    return child
+
+
 def main():
     """
     Main function that will parse input and call the appropriate algorithm. You do not need to understand everything
@@ -246,12 +322,12 @@ def main():
         return False
 
     print('Which algorithm to use?')
-    algorithm = input('1: random, 2: hill-climbing, 3: simulated annealing \n')
+    algorithm = input('1: random, 2: hill-climbing, 3: simulated annealing, 4: genetic algorithm \n')
 
     try:
         algorithm = int(algorithm)
 
-        if algorithm not in range(1, 4):
+        if algorithm not in range(1, 5):
             raise ValueError
 
     except ValueError:
@@ -268,6 +344,9 @@ def main():
         hill_climbing(board)
     if algorithm == 3:
         simulated_annealing(board)
+    if algorithm == 4:
+        genetic_algortihm(board)
+        
 
 
 # This line is the starting point of the program.
