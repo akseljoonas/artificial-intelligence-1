@@ -211,8 +211,9 @@ def genetic_algortihm(board):
 
     population  = []
     population_fitness = []
-    POPULATION_SIZE = 60
-    MUTATION_PROBABILITY = 0.05
+    POPULATION_SIZE = 100
+    NEW_GEN_CUT = 0.4
+    MUTATION_PROBABILITY = 0.1
     
     for i in range(POPULATION_SIZE):
         temp = init_board(len(board))
@@ -228,6 +229,8 @@ def genetic_algortihm(board):
 
         # START OF GENETIC
         new_population = []
+        new_population_fitness = []
+        
         for i in range(POPULATION_SIZE):
             mom = random.choice(population)
             dad = random.choice(population)
@@ -236,8 +239,25 @@ def genetic_algortihm(board):
                 child = mutate(child)
             
             new_population.append(child)
+            new_population_fitness.append(get_fitness(child))
+            
+        #map fitness to state and sort it
+        
+        top10, top10_fitness = [list(a) for a in zip(*sorted(zip(new_population, new_population_fitness), key=lambda pair: pair[1], reverse=True))]
 
-        population = new_population
+        
+        #print(new_population, new_population_fitness)
+        
+        population = top10[:int(POPULATION_SIZE * NEW_GEN_CUT)]
+        
+        population_fitness = top10_fitness[:int(POPULATION_SIZE * NEW_GEN_CUT)]
+
+        """for i in range(int(POPULATION_SIZE * NEW_GEN_CUT)):
+        if population_fitness[i] == 1.0:
+        print('Solved puzzle! BUT DIDNT ASSIGN')"""
+
+        
+        board = top10[0]
 
 
     if evaluate_state(board) == optimum:
