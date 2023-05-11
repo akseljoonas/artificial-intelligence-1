@@ -252,44 +252,42 @@ def genetic_algortihm(board):
     NEW_GEN_CUT = 0.2
     MUTATION_PROBABILITY = 0.1
     
+    # generate 1st population and their fitnesses
     for i in range(POPULATION_SIZE):
         temp = init_board(len(board))
         population.append(temp)
         population_fitness.append(get_fitness(temp))
 
 
+    
     while evaluate_state(board) != optimum:
         iterations += 1
         print('iteration ' + str(iterations) + ': evaluation = ' + str(evaluate_state(board)))
-        if iterations == 10000:  # Give up after 1000 tries.
+        if iterations == 1000:  # Give up after 1000 tries.
             break
 
-        # START OF GENETIC
+        #map fitness to state and sort the lists
+        reproduction, reproduction_fitness = [list(a) for a in zip(*sorted(zip(population, population_fitness), key=lambda pair: pair[1], reverse=True))]
+        
         new_population = []
         new_population_fitness = []
         
         for i in range(POPULATION_SIZE):
-            mom = random.choice(population)
-            dad = random.choice(population)
+            
+            # select best for reproduction
+            mom = random.choice(reproduction[:int(POPULATION_SIZE * NEW_GEN_CUT)])
+            dad = random.choice(reproduction[:int(POPULATION_SIZE * NEW_GEN_CUT)])
+            
             child = reproduce(mom, dad)
+            
             if (random.random() < MUTATION_PROBABILITY):
                 child = mutate(child)
             
             new_population.append(child)
             new_population_fitness.append(get_fitness(child))
-            
-        #map fitness to state and sort it
         
-        top10, top10_fitness = [list(a) for a in zip(*sorted(zip(new_population, new_population_fitness), key=lambda pair: pair[1], reverse=True))]
-
+        board = reproduction[0]
         
-        population = top10[:int(POPULATION_SIZE * NEW_GEN_CUT)]
-        
-        population_fitness = top10_fitness[:int(POPULATION_SIZE * NEW_GEN_CUT)]
-
-
-        
-        board = top10[0]
 
 
     if evaluate_state(board) == optimum:
@@ -301,7 +299,7 @@ def genetic_algortihm(board):
 def get_fitness(board):
     return 1/(1+count_conflicts(board))
 
-def reproduce(x,y): # finish this shit
+def reproduce(x,y):
     cut = random.randint(0, len(x)-1)
     return x[:cut] + y[cut:]
 
