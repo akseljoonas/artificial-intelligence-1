@@ -129,35 +129,11 @@ def random_search(board):
     print_board(board)
 
 """
-best_board = board.copy()
-new_board = board.copy()
-for i in range(100):
-    new_board[random.randint(0, len(board)-1)]= random.randint(0, len(board)-1)
-    if evaluate_state(new_board) > evaluate_state(best_board):
-                best_board = new_board.copy()
-            elif evaluate_state(new_board) == evaluate_state(best_board):
-                if random.randint(0, 1) == 1:
-                    best_board = new_board.copy()
-
-                    
-best_board = board.copy()
-    for column in range(len(board)):
-        new_board = board.copy()
-        for row in range(len(board)):
-            new_board[column] = row
-            # newly found board is better
-            if evaluate_state(new_board) > evaluate_state(best_board):
-                best_board = new_board.copy()
-            elif evaluate_state(new_board) == evaluate_state(best_board):
-                if random.randint(0, 1) == 1:
-                    best_board = new_board.copy()
-
-"""
 def find_best_neighbor(board):
-    best_board = board.copy()
+ best_board = board.copy()
     new_board = board.copy()
-    for i in range(100):
-        new_board[random.randint(0, len(board)-1)]= random.randint(0, len(board)-1)
+    for i in range(200):
+        new_board[random.randint(0, len(board)-1)] = random.randint(0, len(board)-1)
         if evaluate_state(new_board) > evaluate_state(best_board):
                 best_board = new_board.copy()
         elif evaluate_state(new_board) == evaluate_state(best_board):
@@ -165,27 +141,64 @@ def find_best_neighbor(board):
                     best_board = new_board.copy()
     return best_board
 
+best_board = board.copy()
+    for i in range(200):
+        row = random.randint(0, len(board)-1)
+        col = random.randint(0, len(board)-1)
+        while board[row] == col:
+            col = random.randint(0, len(board)-1)
+        new_board = board.copy()
+        new_board[row] = col
+        if evaluate_state(new_board) > evaluate_state(best_board):
+            best_board = new_board.copy()
+        elif evaluate_state(new_board) == evaluate_state(best_board):
+            if random.randint(0, 1) == 1:
+                best_board = new_board.copy()
+    return best_board
+
+"""
+def find_best_neighbor(board):
+    best_board = board.copy()
+    for i in range(200):
+        row = random.randint(0, len(board)-1)
+        column = random.randint(0, len(board)-1)
+        while board[column] == row:
+            row = random.randint(0, len(board)-1)
+        new_board = board.copy()
+        new_board[column] = row
+        if evaluate_state(new_board) > evaluate_state(best_board):
+            best_board = new_board.copy()
+        elif evaluate_state(new_board) == evaluate_state(best_board):
+            if random.randint(0, 1) == 1:
+                best_board = new_board.copy()
+    return best_board
+
 def hill_climbing(board):
+    solved = 0
+    for iterations in range(10):
+        board = init_board(len(board))
+        i = 0
+        optimum = (len(board) - 1) * len(board) / 2
 
-    i = 0
-    optimum = (len(board) - 1) * len(board) / 2
+        while evaluate_state(board) != optimum:
+            i += 1
+            #print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
+            #print_board(board)
+            if i == 1000:  # Give up after 1000 tries.
+                break
 
-    while evaluate_state(board) != optimum:
-        i += 1
-        print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
+            best_neighbor = find_best_neighbor(board)
+            if evaluate_state(best_neighbor) >= evaluate_state(board):
+                board = best_neighbor.copy()
+
+        if evaluate_state(board) == optimum:
+            solved += 1
+            #print('Solved puzzle!')
+
+        #print('Final state is:')
         #print_board(board)
-        if i == 1000:  # Give up after 1000 tries.
-            break
 
-        best_neighbor = find_best_neighbor(board)
-        if evaluate_state(best_neighbor) >= evaluate_state(board):
-            board = best_neighbor.copy()
-
-    if evaluate_state(board) == optimum:
-        print('Solved puzzle!')
-
-    print('Final state is:')
-    print_board(board)
+    print("the puzzle was solved " + str(solved) + " times.")
 
 def time_to_temperature(time):
     return 1000 * pow(0.999, time)
