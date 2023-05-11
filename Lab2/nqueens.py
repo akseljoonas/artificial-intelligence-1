@@ -248,8 +248,8 @@ def genetic_algortihm(board):
 
     population  = []
     population_fitness = []
-    POPULATION_SIZE = 100
-    NEW_GEN_CUT = 0.4
+    POPULATION_SIZE = 150
+    NEW_GEN_CUT = 0.2
     MUTATION_PROBABILITY = 0.1
     
     for i in range(POPULATION_SIZE):
@@ -261,7 +261,7 @@ def genetic_algortihm(board):
     while evaluate_state(board) != optimum:
         iterations += 1
         print('iteration ' + str(iterations) + ': evaluation = ' + str(evaluate_state(board)))
-        if iterations == 1000:  # Give up after 1000 tries.
+        if iterations == 10000:  # Give up after 1000 tries.
             break
 
         # START OF GENETIC
@@ -283,15 +283,10 @@ def genetic_algortihm(board):
         top10, top10_fitness = [list(a) for a in zip(*sorted(zip(new_population, new_population_fitness), key=lambda pair: pair[1], reverse=True))]
 
         
-        #print(new_population, new_population_fitness)
-        
         population = top10[:int(POPULATION_SIZE * NEW_GEN_CUT)]
         
         population_fitness = top10_fitness[:int(POPULATION_SIZE * NEW_GEN_CUT)]
 
-        """for i in range(int(POPULATION_SIZE * NEW_GEN_CUT)):
-        if population_fitness[i] == 1.0:
-        print('Solved puzzle! BUT DIDNT ASSIGN')"""
 
         
         board = top10[0]
