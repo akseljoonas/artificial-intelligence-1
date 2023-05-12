@@ -1,6 +1,7 @@
 import sys
 import random
 import math
+import time
 
 MAXQ = 100
 
@@ -159,7 +160,7 @@ best_board = board.copy()
 """
 def find_best_neighbor(board):
     best_board = board.copy()
-    for i in range(200):
+    for i in range(100):
         row = random.randint(0, len(board)-1)
         column = random.randint(0, len(board)-1)
         while board[column] == row:
@@ -176,6 +177,7 @@ def find_best_neighbor(board):
 def hill_climbing(board):
     solved = 0
     for iterations in range(10):
+        start_time = time.time()
         board = init_board(len(board))
         i = 0
         optimum = (len(board) - 1) * len(board) / 2
@@ -194,6 +196,7 @@ def hill_climbing(board):
         if evaluate_state(board) == optimum:
             solved += 1
             #print('Solved puzzle!')
+            print("%s seconds." % (time.time() - start_time))
 
         #print('Final state is:')
         #print_board(board)
@@ -204,40 +207,48 @@ def time_to_temperature(time):
     return 1000 * pow(0.999, time)
 
 def simulated_annealing(board):
+    solved = 0
     optimum = (len(board) - 1) * len(board) / 2
     current_board = board.copy()
     T = 1000
     time = 0
-    while evaluate_state(board) != optimum:
-        time += 1
-        #print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
-        print('iteration ' + str(time) + ': evaluation = ' + str(evaluate_state(current_board)))
-        T = time_to_temperature(time)
+    
+    for i in range(10):
+        
+        board = init_board(len(board))
+        while evaluate_state(board) != optimum:
+            time += 1
+            #print('iteration ' + str(i) + ': evaluation = ' + str(evaluate_state(board)))
+            #print('iteration ' + str(time) + ': evaluation = ' + str(evaluate_state(current_board)))
+            T = time_to_temperature(time)
 
-        new_board = current_board.copy()
-        new_board[random.randint(0, len(board)-1)]= random.randint(0, len(board)-1)
-        delta_e = count_conflicts(new_board) - count_conflicts(current_board)
+            new_board = current_board.copy()
+            new_board[random.randint(0, len(board)-1)]= random.randint(0, len(board)-1)
+            delta_e = count_conflicts(new_board) - count_conflicts(current_board)
 
-        if T == 0 or time == 100000:
-            break
+            if T == 0 or time == 100000:
+                break
 
-        if delta_e <= 0:
-            current_board = new_board.copy()
-        else:
-            random_chance = random.random()
-            p = math.exp(-delta_e / T)
-            if random_chance < p:
+            if delta_e <= 0:
                 current_board = new_board.copy()
+            else:
+                random_chance = random.random()
+                p = math.exp(-delta_e / T)
+                if random_chance < p:
+                    current_board = new_board.copy()
 
-        board = current_board.copy()
+            board = current_board.copy()
 
 
-        if evaluate_state(board) == optimum:
-            print('Solved puzzle!')
-            break
+            if evaluate_state(board) == optimum:
+                print('Solved puzzle!')
+                print("%s seconds." % (time.time() - start_time))
+                solved += 1
+                break
 
-    print('Final state is:')
-    print_board(board)
+    print("the puzzle was solved " + str(solved) + " times.")
+    #print('Final state is:')
+    #print_board(board)
 
 
 
