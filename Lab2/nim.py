@@ -9,13 +9,13 @@ def max_value(state, t_table):
 
     for move in range(1, 4):
         if state-move > 0:
-            if t_table[state][0] == -1:
+            if t_table[state-move][1] == -1:
                 m = -1
-            elif t_table[state][0] == 1:
+            elif t_table[state-move][1] == 1:
                 m = 1
-            elif t_table[state][0] == None:
+            elif t_table[state-move][1] == None:
                 m = min_value(state-move, t_table)
-                t_table[state][1] = m
+                t_table[state-move][1] = m
             max = m if m > max else max
 
     return max
@@ -29,43 +29,16 @@ def min_value(state, t_table):
 
     for move in range(1, 4):
         if state-move > 0:
-            if t_table[state][1] == -1:
+            if t_table[state-move][0] == -1:
                 m = -1
-            elif t_table[state][1] == 1:
+            elif t_table[state-move][0] == 1:
                 m = 1
-            elif t_table[state][1] == None:
+            elif t_table[state-move][0] == None:
                 m = max_value(state-move, t_table)
-                t_table[state][0] = m
+                t_table[state-move][0] = m
             min = m if m < min else min
 
     return min
-
-
-
-def minimax_decision(state, turn):
-    best_move = None
-
-    if turn == 0:  # MAX' turn
-        max = -100000000000
-
-        for move in range(1, 4):
-            if state - move > 0:
-                m = min_value(state - move)
-                if m > max:
-                    max = m
-                    best_move = move
-
-    else:
-        min = 10000000000000
-
-        for move in range(1, 4):
-            if state - move > 0:
-                m = max_value(state-move)
-                if m < min:
-                    min = m
-                    best_move = move
-
-    return best_move
 
 def negamax_decision(state, turn, t_table):
     best_move = None
@@ -93,7 +66,7 @@ def negamax_decision(state, turn, t_table):
     return best_move, m
 
 def play_nim(state):
-    t_table = [[None for x in range(2)] for y in range(state)]
+    t_table = [[None for x in range(2)] for y in range(state+1)]
     turn = 0
     wadeva = state
     while state != 1:
@@ -105,9 +78,6 @@ def play_nim(state):
         turn = 1 - turn
 
     print("1: " + ("MAX" if not turn else "MIN") + " looses")
-    for i in range(1, wadeva):
-        print(str(i) + " matches, Max turn: " + str(t_table[i][0]))
-        print(str(i) + " matches, Min Turn: " + str(t_table[i][1]))
 
 
 def main():
@@ -121,7 +91,7 @@ def main():
             raise ValueError
 
         state = int(sys.argv[1])
-        if state < 1 or state > 100:
+        if state < 1 or state > 1000:
             raise ValueError
 
         play_nim(state)
