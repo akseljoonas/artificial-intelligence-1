@@ -129,35 +129,6 @@ def random_search(board):
     print('Final state is:')
     print_board(board)
 
-"""
-def find_best_neighbor(board):
- best_board = board.copy()
-    new_board = board.copy()
-    for i in range(200):
-        new_board[random.randint(0, len(board)-1)] = random.randint(0, len(board)-1)
-        if evaluate_state(new_board) > evaluate_state(best_board):
-                best_board = new_board.copy()
-        elif evaluate_state(new_board) == evaluate_state(best_board):
-                if random.randint(0, 1) == 1:
-                    best_board = new_board.copy()
-    return best_board
-
-best_board = board.copy()
-    for i in range(200):
-        row = random.randint(0, len(board)-1)
-        col = random.randint(0, len(board)-1)
-        while board[row] == col:
-            col = random.randint(0, len(board)-1)
-        new_board = board.copy()
-        new_board[row] = col
-        if evaluate_state(new_board) > evaluate_state(best_board):
-            best_board = new_board.copy()
-        elif evaluate_state(new_board) == evaluate_state(best_board):
-            if random.randint(0, 1) == 1:
-                best_board = new_board.copy()
-    return best_board
-
-"""
 def find_best_neighbor(board):
     best_board = board.copy()
     for i in range(100):
@@ -176,7 +147,7 @@ def find_best_neighbor(board):
 
 def hill_climbing(board):
     solved = 0
-    for iterations in range(10):
+    for iterations in range(10): # implementation of automatic testing
         start_time = time.time()
         board = init_board(len(board))
         i = 0
@@ -213,7 +184,7 @@ def simulated_annealing(board):
     T = 1000
     time = 0
     
-    for i in range(10):
+    for i in range(10): # implementation of automatic testing
         
         board = init_board(len(board))
         while evaluate_state(board) != optimum:

@@ -68,7 +68,6 @@ def negamax_decision(state, turn, t_table):
 def play_nim(state):
     t_table = [[None for x in range(2)] for y in range(state+1)]
     turn = 0
-    wadeva = state
     while state != 1:
         move, valuation = negamax_decision(state, turn, t_table)
 
