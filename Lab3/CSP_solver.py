@@ -217,11 +217,16 @@ class CSP:
     
     def mrv_heuristic(self) -> Variable:
         # You have to implement this yourself
-        raise NotImplementedError
+        list_of_unassigned = self.unassigned_var()
+        len_of_domain = lambda variable: len(variable.domain)
+        return min(list_of_unassigned, key=len_of_domain)
 
     def degree_heuristic(self) -> Variable:
         # You have to implement this yourself
-        raise NotImplementedError
+        list_of_unassigned = self.unassigned_var()
+        num_of_constraints = lambda variable: len(variable.constraints)
+        return max(list_of_unassigned, key= num_of_constraints)
+        
     
     def choose_next_variable(self) -> Variable:
         return self.variables[self.n_assigned_variables]

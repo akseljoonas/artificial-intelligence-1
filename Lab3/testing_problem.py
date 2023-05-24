@@ -18,4 +18,4 @@ constraints = [
 ]
 
 csp = CSP(variables, constraints, keep_node=False, keep_arc= False, heuristic= "mrv")
-csp.solve()
+csp.solve() 
