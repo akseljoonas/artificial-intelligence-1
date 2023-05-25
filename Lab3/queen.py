@@ -17,5 +17,5 @@ for q1 in range(N_QUEENS):
         constraint = Constraint(f"{q2 - q1} != abs( queen_{q1} - queen_{q2})")
         constraints.append(constraint)
 
-csp= CSP(variables, constraints)
+csp= CSP(variables, constraints,init_node=True, init_arc=True, heuristic="mrv")
 csp.solve()

@@ -1,4 +1,5 @@
 from  CSP_solver import *
+import time
 
 variables = [
     Variable("A", domain = [1,2,3,4] ),
@@ -19,7 +20,11 @@ constraints = [
     Constraint("C > E")
 ]
     
-
-
-csp = CSP(variables, constraints, keep_node=False, keep_arc= False, heuristic= "mrv")
-csp.solve() 
+seconds = 0
+for i in range(10):
+    start_time = time.time()
+    csp = CSP(variables, constraints, init_node= False, init_arc=True, keep_node=True, keep_arc=False, heuristic= "deg")
+    csp.solve() 
+    seconds += (time.time()-start_time)
+    
+print (f"---------------- {(seconds/10)} seconds ----------------")
