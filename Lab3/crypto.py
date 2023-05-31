@@ -21,6 +21,6 @@ constraints = [
 ]
 
 
-csp = CSP(variables, constraints, init_node = True, init_arc = True, keep_node= True, keep_arc= True, heuristic= "mrv")
+csp = CSP(variables, constraints, init_node = False, init_arc = False, keep_node= True, keep_arc= True, heuristic= "mrv")
 
 csp.solve()
