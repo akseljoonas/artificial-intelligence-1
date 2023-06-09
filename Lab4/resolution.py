@@ -259,9 +259,7 @@ def resolution(kb):
 
 
 def init():
-    """
-    Makes an example hardcoded KB with clauses {~a,~b}, {a,~b,~c,~d}, {b,~d}, {c,~d}
-    """
+
     kb = []
     
     print("Format to enter KB: KB=[[clause1], [clause2], ...]")
@@ -280,14 +278,7 @@ def init():
 # It should not be necessary to change any code above this line!
 ##
 
-def recursive_print_proof(idx, clause_set,proof): # find parents
-    
-
-        
-    #1 can resolve
-    #2 resolve_clauses
-    #2.5 ???
-    #3 last clause (-d in example) passed into recursion
+def recursive_print_proof(idx, clause_set): # find parents
     
     
     # Loop through all clauses in the kb and compare each clause to all following clauses
@@ -299,12 +290,16 @@ def recursive_print_proof(idx, clause_set,proof): # find parents
                 parent1 = clause_set[i]
                 parent2 = clause_set[j]
                 
-                proof.append(parent1)
-                proof.append(parent2)
+                recursive_print_proof(find_index_of_clause(parent1, clause_set), clause_set)
+                recursive_print_proof(find_index_of_clause(parent2, clause_set), clause_set)
                 
                 
-                recursive_print_proof(find_index_of_clause(parent1, clause_set), clause_set, proof)
-                recursive_print_proof(find_index_of_clause(parent2, clause_set), clause_set, proof)
+                clause_set[idx].print_clause()
+                print(" is inferred from ", end="")
+                clause_set[find_index_of_clause(parent1, clause_set)].print_clause()
+                print(" and ", end="")
+                clause_set[find_index_of_clause(parent2, clause_set)].print_clause()
+                print("")
                 return
 
                 
@@ -314,15 +309,9 @@ def recursive_print_proof(idx, clause_set,proof): # find parents
 def print_proof(clause_set):
     empty_clause = Clause("")
     idx = find_index_of_clause(empty_clause, clause_set)
-    
-    proof=[]
-    recursive_print_proof(idx, clause_set, proof)
-    
+    recursive_print_proof(idx, clause_set)
+
   
-    for i in range(0, int(len(proof)), 2):
-        print(f"goal is inferred from {proof[i].print_clause()} and {proof[i+1].print_clause()}.")
-        
-    
 
 
 
